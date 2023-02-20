@@ -41,38 +41,20 @@ instructions_list = _{
 
 mark = @{"@" ~ (ASCII_ALPHANUMERIC | "_")+}
 
+comma = _{ "," }
+
 program_line = {
-    instruction ~ (instruction_arg ~ ("," ~ instruction_arg)*)?
+    instruction ~ (instruction_arg ~ (comma ~ instruction_arg)*)?
 }
 
 instruction_arg = {
-    (identifier | HEX_DIGIT | DECIMAL_NUMBER | register | mark)
+    (identifier | number | register | mark)
 }
 
 register = @{
-    "R0" |
-    "R1" |
-    "R2" |
-    "R3"
+    ASCII_ALPHA ~ NUMBER
 }
 
 instruction = @{
-    (
-        "ADD" |
-        "SUB" |
-        "MUL" |
-        "DIV" |
-        "JMP" |
-        "LD" |
-        "FIN" |
-        "OUT" |
-        "EQ" |
-        "L" |
-        "LE" |
-        "LDA" |
-        "INP" |
-        "JCMP" |
-        "JNCMP" |
-        "OUTR"
-    )
+    ASCII_ALPHA+
 }
