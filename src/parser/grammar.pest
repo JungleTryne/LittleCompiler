@@ -1,0 +1,78 @@
+WHITESPACE = _{ " " }
+
+program = _{
+    SOI ~
+    data_section? ~
+    program_section ~
+    EOI
+}
+
+data_section = _{
+    "data:" ~ NEWLINE ~ data_list
+}
+
+data_list = _{
+    (data_line? ~ NEWLINE)*
+}
+
+data_line = {
+    identifier ~ (string_value | number)
+}
+
+number = @{
+    "-"? ~ DECIMAL_NUMBER+
+}
+
+identifier = @{
+    "." ~ (ASCII_ALPHANUMERIC | "_")+
+}
+
+string_value = @{
+    "\"" ~ (ASCII_ALPHANUMERIC | " ")* ~ "\""
+}
+
+program_section = _{
+    "program:" ~ NEWLINE ~ instructions_list
+}
+
+instructions_list = _{
+    ((program_line | mark)? ~ NEWLINE)*
+}
+
+mark = @{"@" ~ (ASCII_ALPHANUMERIC | "_")+}
+
+program_line = {
+    instruction ~ (instruction_arg ~ ("," ~ instruction_arg)*)?
+}
+
+instruction_arg = {
+    (identifier | HEX_DIGIT | DECIMAL_NUMBER | register | mark)
+}
+
+register = @{
+    "R0" |
+    "R1" |
+    "R2" |
+    "R3"
+}
+
+instruction = @{
+    (
+        "ADD" |
+        "SUB" |
+        "MUL" |
+        "DIV" |
+        "JMP" |
+        "LD" |
+        "FIN" |
+        "OUT" |
+        "EQ" |
+        "L" |
+        "LE" |
+        "LDA" |
+        "INP" |
+        "JCMP" |
+        "JNCMP" |
+        "OUTR"
+    )
+}
