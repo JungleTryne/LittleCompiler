@@ -11,3 +11,5 @@ pest_derive = "2.5.5"
 anyhow = {version = "1.0.69", features = ["default"]}
 strum = "0.24.1"
 strum_macros = "0.24.3"
+clap = { version = "4.1.6", features = ["derive"] }
+byteorder = "1.4.3"

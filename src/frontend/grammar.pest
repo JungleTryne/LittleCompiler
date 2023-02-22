@@ -16,7 +16,7 @@ data_list = _{
 }
 
 data_line = {
-    identifier ~ (string_value | number)
+    identifier ~ string_value
 }
 
 number = @{

@@ -1,4 +1,4 @@
-use crate::parser::util_macros::create_parser;
+use crate::frontend::util_macros::create_parser;
 use strum_macros::EnumString;
 
 create_parser! {
@@ -19,7 +19,7 @@ create_parser! {
     JCMP, "jcmp", 0xE;
     JNCMP, "jncmp", 0xF;
     OUTR, "outr", 0x10;
-    OUTRN, "outrn", 0x11;
+    OUTRN, "outrn", 0x11
 }
 
 create_parser! {
@@ -36,7 +36,6 @@ pub enum Node {
 }
 
 pub enum DataValue {
-    Number(i16),
     Str(String),
 }
 

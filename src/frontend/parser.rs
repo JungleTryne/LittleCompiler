@@ -1,4 +1,4 @@
-use crate::parser::ast::{
+use crate::frontend::ast::{
     DataLine, DataValue, Instruction, InstructionArgument, InstructionLine, Node, ProgramLine,
     Register,
 };
@@ -8,7 +8,7 @@ use pest::{self, Parser};
 use std::str::FromStr;
 
 #[derive(pest_derive::Parser)]
-#[grammar = "parser/grammar.pest"]
+#[grammar = "frontend/grammar.pest"]
 pub struct AssemblyParser;
 
 impl AssemblyParser {
@@ -34,18 +34,10 @@ impl AssemblyParser {
             .context("Couldn't extract data name")?
             .as_str()
             .to_owned();
-            .to_owned();
 
         let var_value_iter = data_line.next().context("Couldn't extract data value")?;
 
         let var_value = match var_value_iter.as_rule() {
-            Rule::number => DataValue::Number(
-                var_value_iter
-                    .as_str()
-                    .parse::<i16>()
-                    .context("Couldn't parse data value i16")?,
-            ),
-
             Rule::string_value => DataValue::Str(var_value_iter.as_str().to_owned()),
             _ => {
                 return Err(anyhow!(format!(
@@ -61,10 +53,9 @@ impl AssemblyParser {
         }))
     }
 
-    fn parse_mark(mut mark: Pair<Rule>) -> anyhow::Result<Node> {
+    fn parse_mark(mark: Pair<Rule>) -> anyhow::Result<Node> {
         Ok(Node::ProgramLine(ProgramLine::Mark(
-            mark.as_str()
-                .to_owned(),
+            mark.as_str().to_owned(),
         )))
     }
 
