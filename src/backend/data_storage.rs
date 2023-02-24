@@ -10,39 +10,44 @@ struct DataCellBuf {
 
 pub struct DataStorage {
     data_cells: HashMap<String, DataCellBuf>,
-    current_free_address: u32,
+    size: usize,
 }
 
-impl Default for DataStorage {
-    fn default() -> Self {
-        DataStorage {
-            data_cells: HashMap::new(),
-            current_free_address: MEMORY_START,
-        }
+impl From<Vec<DataLine>> for DataStorage {
+    fn from(data_lines: Vec<DataLine>) -> Self {
+        let mut size = 0 as usize;
+
+        let data_cells: HashMap<_, _> = data_lines
+            .into_iter()
+            .map(|value| (value.var_name, DataStorage::compile_data_value(value.value)))
+            .scan(MEMORY_START, |address, pair| {
+                let new_pair = Some((
+                    pair.0,
+                    DataCellBuf {
+                        address: *address,
+                        value: pair.1,
+                    },
+                ));
+
+                *address += pair.1.len() as u32;
+                size = *address as usize;
+                new_pair
+            })
+            .collect();
+
+        DataStorage { data_cells, size }
     }
 }
 
 impl DataStorage {
-    pub fn push_data_line(&mut self, data_line: DataLine) {
-        let compiled_value = self.compile_data_value(data_line.value);
-        let value_size = compiled_value.len() as u32;
-        let address = self.current_free_address;
-
-        self.data_cells
-            .insert(
-                data_line.var_name,
-                DataCellBuf {
-                    address,
-                    value: compiled_value,
-                },
-            )
-            .unwrap();
-
-        self.current_free_address += value_size;
+    fn compile_data_value(value: DataValue) -> Vec<u8> {
+        match value {
+            DataValue::Str(str) => str.into_bytes(),
+        }
     }
 
     pub fn compile_data_storage(self) -> Vec<u8> {
-        let mut memory = vec![0; self.current_free_address as usize];
+        let mut memory = vec![0; self.size];
 
         for (_, data_cell) in self.data_cells.into_iter() {
             memory[data_cell.address as usize..].copy_from_slice(&data_cell.value)
@@ -57,11 +62,5 @@ impl DataStorage {
             .context("There is not such variable")
             .unwrap()
             .address
-    }
-
-    fn compile_data_value(&self, data_value: DataValue) -> Vec<u8> {
-        match data_value {
-            DataValue::Str(str) => str.into_bytes(),
-        }
     }
 }
