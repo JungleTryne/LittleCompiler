@@ -1,4 +1,4 @@
-use crate::backend::compiler::MEMORY_START;
+use crate::backend::compiler::{ARCH_BYTES, MEMORY_START};
 use crate::frontend::ast::{DataLine, DataValue};
 use anyhow::Context;
 use std::collections::HashMap;
@@ -21,6 +21,8 @@ impl From<Vec<DataLine>> for DataStorage {
             .into_iter()
             .map(|value| (value.var_name, DataStorage::compile_data_value(value.value)))
             .scan(MEMORY_START, |address, pair| {
+                let value_size = pair.1.len() as u32;
+
                 let new_pair = Some((
                     pair.0,
                     DataCellBuf {
@@ -29,17 +31,23 @@ impl From<Vec<DataLine>> for DataStorage {
                     },
                 ));
 
-                *address += pair.1.len() as u32;
+                *address += value_size;
                 size = *address as usize;
                 new_pair
             })
             .collect();
+
+        size = ARCH_BYTES as usize * (size / ARCH_BYTES as usize);
 
         DataStorage { data_cells, size }
     }
 }
 
 impl DataStorage {
+    pub fn size(&self) -> usize {
+        self.size
+    }
+
     fn compile_data_value(value: DataValue) -> Vec<u8> {
         match value {
             DataValue::Str(str) => str.into_bytes(),

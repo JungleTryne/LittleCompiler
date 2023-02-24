@@ -1,7 +1,9 @@
+use std::collections::HashMap;
 use crate::backend::data_storage::DataStorage;
-use crate::frontend::ast::{DataLine, Node, ProgramLine};
+use crate::frontend::ast::{DataLine, InstructionLine, Node, ProgramLine};
 
 pub const MEMORY_START: u32 = 0x30;
+pub const ARCH_BYTES: u32 = 4;
 
 pub struct CompilerBuilder {}
 
@@ -27,6 +29,7 @@ impl CompilerBuilder {
         Compiler {
             data_storage: DataStorage::from(data_lines),
             program_lines,
+            markers: HashMap::new(),
         }
     }
 }
@@ -34,14 +37,29 @@ impl CompilerBuilder {
 pub struct Compiler {
     data_storage: DataStorage,
     program_lines: Vec<ProgramLine>,
+    markers: HashMap<String, u32>,
 }
 
 impl Compiler {
-    pub fn compile(self) -> Vec<u8> {
+    pub fn compile(mut self) -> Vec<u8> {
+        let ip_value = self.data_storage.size();
+        assert_eq!(ip_value % 4, 0);
+
+        for line in self.program_lines {
+            match line {
+                ProgramLine::Mark(mark) => {
+                    self.markers.insert(mark, ip_value as u32);
+                },
+                ProgramLine::InstructionLine(instruction_line) => {
+
+                },
+            }
+        }
+
         unimplemented!()
     }
 
-    fn compile_instruction(&mut self, program_line: ProgramLine) -> Vec<u8> {
+    fn compile_instruction(&mut self, program_line: InstructionLine) -> Vec<u8> {
         unimplemented!()
     }
 }
