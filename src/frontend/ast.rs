@@ -19,7 +19,9 @@ create_parser! {
     JCMP, "jcmp", 0xE;
     JNCMP, "jncmp", 0xF;
     OUTR, "outr", 0x10;
-    OUTRN, "outrn", 0x11
+    SKIP, "skip", 0x11;
+    OUTRN, "outn", 0x12;
+    MOV, "mov", 0x13
 }
 
 create_parser! {

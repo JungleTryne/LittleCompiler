@@ -39,4 +39,4 @@ program:
     JMP @fibonacci_loop
     @fibonacci_loop_end
 
-    OUTRN R2
+    OUTN R2
