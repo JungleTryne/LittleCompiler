@@ -2,4 +2,5 @@ data:
     .hello_world "Hello world"
 
 program:
-    OUT .hello_world
+    LD R0, .hello_world
+    OUT R0

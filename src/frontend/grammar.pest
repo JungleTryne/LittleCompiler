@@ -19,8 +19,20 @@ data_line = {
     identifier ~ string_value
 }
 
-number = @{
-    "-"? ~ DECIMAL_NUMBER+
+_unsigned_number = @{
+    DECIMAL_NUMBER+
+}
+
+_signed_number = @{
+    "-"? ~ _unsigned_number
+}
+
+unsigned_number = @{
+    _unsigned_number ~ "u"
+}
+
+signed_number = @{
+    _signed_number ~ "i"
 }
 
 identifier = @{
@@ -48,7 +60,7 @@ program_line = {
 }
 
 instruction_arg = {
-    (identifier | number | register | mark)
+    (identifier | unsigned_number | signed_number | register | mark)
 }
 
 register = @{

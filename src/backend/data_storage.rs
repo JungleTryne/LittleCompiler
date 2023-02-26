@@ -15,7 +15,7 @@ pub struct DataStorage {
 
 impl From<Vec<DataLine>> for DataStorage {
     fn from(data_lines: Vec<DataLine>) -> Self {
-        let mut size = 0 as usize;
+        let mut size = MEMORY_START as usize;
 
         let data_cells: HashMap<_, _> = data_lines
             .into_iter()
@@ -37,7 +37,7 @@ impl From<Vec<DataLine>> for DataStorage {
             })
             .collect();
 
-        size = ARCH_BYTES as usize * (size / ARCH_BYTES as usize);
+        size = ARCH_BYTES as usize * (size / ARCH_BYTES as usize) + ARCH_BYTES as usize;
 
         DataStorage { data_cells, size }
     }
@@ -58,7 +58,9 @@ impl DataStorage {
         let mut memory = vec![0; self.size];
 
         for (_, data_cell) in self.data_cells.into_iter() {
-            memory[data_cell.address as usize..].copy_from_slice(&data_cell.value)
+            let from = data_cell.address as usize;
+            let to = from + data_cell.value.len();
+            memory[from..to].copy_from_slice(&data_cell.value)
         }
 
         memory

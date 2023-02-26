@@ -13,7 +13,7 @@ pub struct AssemblyParser;
 
 impl AssemblyParser {
     pub fn get_ast(source: &str) -> anyhow::Result<Vec<Node>> {
-        AssemblyParser::parse(Rule::program, &source)
+        AssemblyParser::parse(Rule::program, source)
             .context("unsuccessful parse")?
             .filter_map(|node| match node.as_rule() {
                 Rule::data_line => Some(AssemblyParser::parse_data_line(node.into_inner())),
@@ -98,12 +98,26 @@ impl AssemblyParser {
 
         let instruction_argument = match argument.as_rule() {
             Rule::identifier => InstructionArgument::Identifier(argument.as_str().to_owned()),
-            Rule::number => InstructionArgument::Number(
-                argument
-                    .as_str()
-                    .parse::<i16>()
-                    .context("Couldn't parse instruction argument i16")?,
-            ),
+            Rule::signed_number => {
+                let num_str = argument.as_str();
+                let num_str = &num_str[..num_str.len() - 1];
+
+                InstructionArgument::SignedNumber(
+                    num_str
+                        .parse::<i16>()
+                        .context("Couldn't parse instruction argument i16")?,
+                )
+            }
+            Rule::unsigned_number => {
+                let num_str = argument.as_str();
+                let num_str = &num_str[..num_str.len() - 1];
+
+                InstructionArgument::UnsignedNumber(
+                    num_str
+                        .parse::<u16>()
+                        .context("Couldn't parse instruction argument u16")?,
+                )
+            }
             Rule::register => InstructionArgument::Register(
                 Register::from_str(argument.as_str())
                     .context("Couldn't parse instruction argument register")?,

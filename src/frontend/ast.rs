@@ -3,33 +3,33 @@ use strum_macros::EnumString;
 
 create_parser! {
     Instruction,
-    ADD, "add", 0x1;
-    SUB, "sub", 0x2;
-    MUL, "mul", 0x3;
-    DIV, "div", 0x4;
-    JMP, "jmp", 0x5;
-    LD, "ld", 0x6;
-    FIN, "fin", 0x7;
-    OUT, "out", 0x8;
-    EQ, "eq", 0x9;
-    L, "l", 0xA;
-    LE, "le", 0xB;
-    LDA, "lda", 0xC;
-    INP, "inp", 0xD;
-    JCMP, "jcmp", 0xE;
-    JNCMP, "jncmp", 0xF;
-    OUTR, "outr", 0x10;
-    SKIP, "skip", 0x11;
-    OUTRN, "outn", 0x12;
-    MOV, "mov", 0x13
+    ADD, "add";
+    SUB, "sub";
+    MUL, "mul";
+    DIV, "div";
+    JMP, "jmp";
+    LD, "ld";
+    FIN, "fin";
+    OUT, "out";
+    EQ, "eq";
+    L, "l";
+    LE, "le";
+    LDA, "lda";
+    INP, "inp";
+    JCMP, "jcmp";
+    JNCMP, "jncmp";
+    OUTR, "outr";
+    SKIP, "skip";
+    OUTN, "outn";
+    MOV, "mov"
 }
 
 create_parser! {
     Register,
-    R0, "r0", 0x4;
-    R1, "r1", 0x8;
-    R2, "r2", 0xC;
-    R3, "r3", 0x10
+    R0, "r0";
+    R1, "r1";
+    R2, "r2";
+    R3, "r3"
 }
 
 pub enum Node {
@@ -58,7 +58,8 @@ pub struct InstructionLine {
 
 pub enum InstructionArgument {
     Identifier(String),
-    Number(i16),
+    SignedNumber(i16),
+    UnsignedNumber(u16),
     Register(Register),
     Mark(String),
 }

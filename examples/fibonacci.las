@@ -1,23 +1,20 @@
 data:
     .message "Please enter n to computer fibonacci number "
-    .next_line_ascii_code 10
-    .multiplier 10
-    .zero_char_ascii_code 48
 
 program:
     OUT .message
 
-    LD R3, .zero_char_ascii_code
+    LDA R3, 10u
     INP R0
     SUB R0, R3
     LD R1, .multiplier
 
     @input_loop
-    LD R3, .zero_char_ascii_code
+    LDA R3, 48u
     INP R2
     SUB R2, R3
 
-    LD R3, .next_line_ascii_code
+    LDA R3, 10u
     EQ R2, R3
     JCMP @input_loop_end
 
@@ -26,14 +23,14 @@ program:
     JMP @input_loop
 
     @input_loop_end
-    LDA R1, 0
-    LDA R2, 1
-    LDA R3, 1
+    LDA R1, 0u
+    LDA R2, 1u
+    LDA R3, 1u
 
     @fibonacci_loop
     EQ R0, R3
     JCMP @fibonacci_loop_end
-    SUM R2, R1
+    ADD R2, R1
     SUB R2, R1, R1
     SUB R0, R3
     JMP @fibonacci_loop

@@ -1,8 +1,5 @@
-data:
-    .next_line_ascii_code 10
-
 program:
-    LD R1, .next_line_ascii_code
+    LDA R1, 10u
 
     @loop
     INP R0
