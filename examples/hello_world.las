@@ -4,3 +4,5 @@ data:
 program:
     LD R0, .hello_world
     OUT R0
+
+    FIN

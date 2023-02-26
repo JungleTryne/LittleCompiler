@@ -3,7 +3,7 @@ program:
 
     @loop
     INP R0
-    OUT R0
+    OUTR R0
     EQ R0, R1
     JNCMP @loop
 

@@ -20,6 +20,7 @@ pub fn compile(ast: Vec<Node>) -> Vec<u8> {
     let (markers_storage, instructions) = scan_markers(initial_ip_value, program_lines);
 
     let instruction_line_compiler = InstructionLineCompiler::new(&data_storage, &markers_storage);
+    debug_assert_eq!(initial_ip_value % ARCH_BYTES, 0);
 
     let codes: Vec<u8> = instructions
         .into_iter()
@@ -65,7 +66,7 @@ fn scan_markers(
     let instruction_lines = program_lines
         .into_iter()
         .scan(initial_ip_value, |ip_value, line| {
-            Some(match line {
+            let result = Some(match line {
                 ProgramLine::Mark(mark) => {
                     markers.insert(mark, *ip_value);
                     InstructionLine {
@@ -74,7 +75,9 @@ fn scan_markers(
                     }
                 }
                 ProgramLine::InstructionLine(instruction_line) => instruction_line,
-            })
+            });
+            *ip_value += ARCH_BYTES;
+            result
         })
         .collect();
 
@@ -153,7 +156,10 @@ impl<'a> InstructionLineCompiler<'a> {
                 .context("Couldn't cast mark offset to i16")
                 .unwrap()
         } else {
-            let offset_abs = (u32::MAX - offset)
+            let (offset_abs, overflow) = addr_from.overflowing_sub(addr_to);
+            assert!(!overflow);
+
+            let offset_abs = offset_abs
                 .to_i16()
                 .context("Couldn't cast mark offset to i16")
                 .unwrap();
