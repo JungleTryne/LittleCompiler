@@ -131,10 +131,13 @@ impl<'a> InstructionLineCompiler<'a> {
                 },
                 InstructionArgument::Identifier(identifier) => {
                     let data_addr = self.data_storage.get_var_address(&identifier);
-                    let offset = self.get_offset(current_ip, data_addr);
+                    let data_addr = data_addr
+                        .to_u16()
+                        .context("Couldn't cast data address to u16")
+                        .unwrap();
 
                     let mut num_bytes = vec![0; 2];
-                    LittleEndian::write_i16(&mut num_bytes, offset);
+                    LittleEndian::write_u16(&mut num_bytes, data_addr);
                     num_bytes
                 }
             })
@@ -190,5 +193,6 @@ fn get_code(instruction: Instruction) -> u8 {
         Instruction::SKIP => 0x11,
         Instruction::OUTN => 0x12,
         Instruction::MOV => 0x13,
+        Instruction::INPN => 0x14,
     }
 }

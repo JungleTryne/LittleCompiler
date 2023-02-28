@@ -21,7 +21,8 @@ create_parser! {
     OUTR, "outr";
     SKIP, "skip";
     OUTN, "outn";
-    MOV, "mov"
+    MOV, "mov";
+    INPN, "inpn"
 }
 
 create_parser! {

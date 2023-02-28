@@ -38,7 +38,10 @@ impl AssemblyParser {
         let var_value_iter = data_line.next().context("Couldn't extract data value")?;
 
         let var_value = match var_value_iter.as_rule() {
-            Rule::string_value => DataValue::Str(var_value_iter.as_str().to_owned()),
+            Rule::string_value => {
+                let str_value = var_value_iter.as_str();
+                DataValue::Str(str_value[1..str_value.len() - 1].to_owned())
+            },
             _ => {
                 return Err(anyhow!(format!(
                     "Unexpected rule in parse_data_line {}",
