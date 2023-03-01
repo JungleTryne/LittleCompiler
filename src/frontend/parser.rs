@@ -14,7 +14,7 @@ pub struct AssemblyParser;
 impl AssemblyParser {
     pub fn get_ast(source: &str) -> anyhow::Result<Vec<Node>> {
         AssemblyParser::parse(Rule::program, source)
-            .context("unsuccessful parse")?
+            .context("Unsuccessful parse")?
             .filter_map(|node| match node.as_rule() {
                 Rule::data_line => Some(AssemblyParser::parse_data_line(node.into_inner())),
                 Rule::program_line => Some(AssemblyParser::parse_program_line(node.into_inner())),
@@ -41,7 +41,7 @@ impl AssemblyParser {
             Rule::string_value => {
                 let str_value = var_value_iter.as_str();
                 DataValue::Str(str_value[1..str_value.len() - 1].to_owned())
-            },
+            }
             _ => {
                 return Err(anyhow!(format!(
                     "Unexpected rule in parse_data_line {}",
