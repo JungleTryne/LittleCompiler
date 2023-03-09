@@ -37,7 +37,9 @@ create_parser! {
     SKIP, "skip";
     OUTN, "outn";
     MOV, "mov";
-    INPN, "inpn"
+    INPN, "inpn";
+    PUSH, "push";
+    POP, "pop"
 }
 
 create_parser! {
@@ -45,7 +47,8 @@ create_parser! {
     R0, "r0";
     R1, "r1";
     R2, "r2";
-    R3, "r3"
+    R3, "r3";
+    SP, "sp"
 }
 
 pub enum Node {

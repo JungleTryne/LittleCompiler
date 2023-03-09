@@ -45,12 +45,10 @@ impl<'a> InstructionLineCompiler<'a> {
                     LittleEndian::write_i16(&mut num_bytes, offset);
                     num_bytes
                 }
-                InstructionArgument::Register(register) => match register {
-                    Register::R0 => vec![0x4],
-                    Register::R1 => vec![0x8],
-                    Register::R2 => vec![0xC],
-                    Register::R3 => vec![0x10],
-                },
+                InstructionArgument::Register(register) => {
+                    let addr = get_register_address(register);
+                    vec![addr]
+                }
                 InstructionArgument::Identifier(identifier) => {
                     let data_addr = self.data_storage.get_var_address(&identifier);
                     let data_addr = data_addr
@@ -94,6 +92,18 @@ impl<'a> InstructionLineCompiler<'a> {
     }
 }
 
+fn get_register_address(register: Register) -> u8 {
+    #[allow(clippy::identity_op)]
+    let addr = match register {
+        Register::R0 => 1 * ARCH_BYTES,
+        Register::R1 => 2 * ARCH_BYTES,
+        Register::R2 => 3 * ARCH_BYTES,
+        Register::R3 => 4 * ARCH_BYTES,
+        Register::SP => 7 * ARCH_BYTES,
+    };
+    addr as u8
+}
+
 fn get_code(instruction: Instruction) -> u8 {
     match instruction {
         Instruction::ADD => 0x01,
@@ -116,5 +126,7 @@ fn get_code(instruction: Instruction) -> u8 {
         Instruction::OUTN => 0x12,
         Instruction::MOV => 0x13,
         Instruction::INPN => 0x14,
+        Instruction::PUSH => 0x15,
+        Instruction::POP => 0x16,
     }
 }

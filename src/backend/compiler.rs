@@ -6,6 +6,7 @@ use std::collections::HashMap;
 
 pub const MEMORY_START: u32 = 0x30;
 pub const ARCH_BYTES: u32 = 4;
+pub const STACK_MEMORY_SIZE: usize = 2048;
 
 pub type MarkerStorage = HashMap<String, u32>;
 
@@ -36,6 +37,9 @@ pub fn compile(ast: Vec<Node>) -> Vec<u8> {
     for (i, byte) in ip_value_bytes.into_iter().enumerate() {
         program[i] = byte;
     }
+
+    let stack_memory = vec![0; STACK_MEMORY_SIZE];
+    program.extend_from_slice(&stack_memory);
 
     program
 }
