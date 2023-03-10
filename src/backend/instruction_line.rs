@@ -5,7 +5,7 @@ use anyhow::Context;
 use byteorder::{ByteOrder, LittleEndian};
 use num::ToPrimitive;
 
-#[derive()]
+
 pub struct InstructionLineCompiler<'a> {
     data_storage: &'a DataStorage,
     marker_storage: &'a MarkerStorage,
@@ -128,5 +128,7 @@ fn get_code(instruction: Instruction) -> u8 {
         Instruction::INPN => 0x14,
         Instruction::PUSH => 0x15,
         Instruction::POP => 0x16,
+        Instruction::CALL => 0x17,
+        Instruction::RET => 0x18,
     }
 }

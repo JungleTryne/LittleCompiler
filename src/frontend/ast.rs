@@ -39,7 +39,9 @@ create_parser! {
     MOV, "mov";
     INPN, "inpn";
     PUSH, "push";
-    POP, "pop"
+    POP, "pop";
+    CALL, "call";
+    RET, "ret"
 }
 
 create_parser! {
