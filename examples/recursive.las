@@ -2,7 +2,6 @@ program:
     LDA R1, 5u
     LDA R0, 0u
     LDA R2, 1u
-    
     call @subprogram
 
     FIN

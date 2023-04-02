@@ -14,6 +14,14 @@ program:
 
     FIN
 
+    // Code for this
+    // func fib_func(x) {
+    //  if x <= 1 {
+    //   return 1
+    //  }
+    //  return f(x - 1) + f(x - 2)
+    // }
+
     @fib_func
     LE R0, R3
     JCMP @fib_func_basis

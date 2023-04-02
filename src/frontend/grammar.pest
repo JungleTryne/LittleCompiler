@@ -48,7 +48,7 @@ program_section = _{
 }
 
 instructions_list = _{
-    ((program_line | mark)? ~ NEWLINE)*
+    ((comment | program_line | mark)? ~ NEWLINE)*
 }
 
 mark = @{"@" ~ (ASCII_ALPHANUMERIC | "_")+}
@@ -69,4 +69,12 @@ register = @{
 
 instruction = @{
     ASCII_ALPHA+
+}
+
+comment = @{
+    "//" ~ ASCII_CONTENT
+}
+
+ASCII_CONTENT = @{
+    (ASCII_ALPHANUMERIC | SYMBOL | SEPARATOR | PUNCTUATION)*
 }

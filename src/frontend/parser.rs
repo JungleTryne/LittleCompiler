@@ -19,6 +19,7 @@ impl AssemblyParser {
                 Rule::data_line => Some(AssemblyParser::parse_data_line(node.into_inner())),
                 Rule::program_line => Some(AssemblyParser::parse_program_line(node.into_inner())),
                 Rule::mark => Some(AssemblyParser::parse_mark(node)),
+                Rule::comment => None,
                 Rule::EOI => None,
                 _ => Some(Err(anyhow!(format!(
                     "Unexpected rule in get_ast {}",
