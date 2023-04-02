@@ -7,6 +7,7 @@ use std::collections::HashMap;
 pub const MEMORY_START: u32 = 0x30;
 pub const ARCH_BYTES: u32 = 4;
 pub const STACK_MEMORY_SIZE: usize = 2048;
+pub const SP_MEMORY_ADDR: usize = 28;
 
 pub type MarkerStorage = HashMap<String, u32>;
 
@@ -36,6 +37,13 @@ pub fn compile(ast: Vec<Node>) -> Vec<u8> {
     LittleEndian::write_u32(&mut ip_value_bytes, initial_ip_value);
     for (i, byte) in ip_value_bytes.into_iter().enumerate() {
         program[i] = byte;
+    }
+
+    let sp_value = program.len() as u32;
+    let mut sp_value_bytes = vec![0; 4];
+    LittleEndian::write_u32(&mut sp_value_bytes, sp_value);
+    for (i, byte) in sp_value_bytes.into_iter().enumerate() {
+        program[i + SP_MEMORY_ADDR] = byte;
     }
 
     let stack_memory = vec![0; STACK_MEMORY_SIZE];
