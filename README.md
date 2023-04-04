@@ -2,6 +2,17 @@
 
 My little compiler of custom assembly for the toy [virtual machine](https://github.com/JungleTryne/VMachine).
 
+```
+program:
+    LDA R1, 10u
+    @loop
+    INP R0
+    OUTR R0
+    EQ R0, R1
+    JNCMP @loop
+    FIN
+```
+
 ## Warning
 
 The syntax is clumsy (for example, there must be a new line at the end of the source), but eventually
